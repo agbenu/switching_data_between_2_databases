@@ -1,0 +1,82 @@
+
+
+/* SQL QUERIES TO GO ALONG WITH THE BLOG ON HOW TO SWITCH DATA BETWEEN 2 DATABASES FROM AGBENU.WORDPRESS.COM */
+
+
+/* CREATE BLOG PRODUCTION */
+
+create DATABASE blog_production;
+
+
+/* CREATE BLOG TEST */
+
+create DATABASE blog_test;
+
+
+
+/*CREATE TABLE CALLED ARTICLES IN BOTH DATABASES */
+
+CREATE TABLE `article` (
+  `id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `article`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `article`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+/*POPULATE THE ARTICLE TABLE IN BOTH DATABASES WITH DIFFERENT INFORMATION*/
+
+/*STARTING WITH THE ARTICLE TABLE IN BLOG PRODUCTION */
+INSERT INTO `article` (`id`, `title`, `date`) VALUES ('1', 'test title #1', CURRENT_TIMESTAMP), ('2', 'test title #2', CURRENT_TIMESTAMP);
+
+
+/*STARTING WITH THE ARTICLE TABLE IN BLOG TEST */
+INSERT INTO `article` (`id`, `title`, `date`) VALUES ('1', 'live title #1', CURRENT_TIMESTAMP), ('2', 'live title #2', CURRENT_TIMESTAMP);
+
+
+/*SEEING WE MADE A MISTAKE WE WANT TO SWITCH THE INFORMATION IN BOTH TABLES */
+
+/* CREATE BLOG FIX */
+
+create DATABASE blog_fix;
+
+
+/*RENAME THE TABLE IN PRODUCTION DATABASE*/
+
+RENAME TABLE `blog_production`.`article` TO `blog_fix`.`article`;
+
+
+/*RENAME THE TABLE IN TEST DATABASE*/
+
+RENAME TABLE `blog_test`.`article` TO `blog_production`.`article`;
+
+
+/*RENAME THE TABLE IN FIX DATABASE*/
+
+RENAME TABLE `blog_fix`.`article` TO `blog_test`.`article`;
+
+
+/*DROP THE FIX DATABASE */
+
+drop database  blog_fix;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
